@@ -36,6 +36,7 @@ import StringIO
 import base64
 import Image
 import datetime
+from whichcraft import which
 
 '''
 Disclaimer: Quick and dirty hacktool for flex remoting server.  I suck at python.
@@ -518,6 +519,9 @@ w6gfoX4EOB6M+pFtGPUj2zDqR6gfAY4Ho36E+hHgeDDqR7bhfwIMAIc9EWduE4gCAAAAAElFTkSu
 QmCC
 """
 
+def is_tool(name):
+    """Check whether `name` is on PATH and marked as executable."""
+    return which(name) is not None
 
 
 def buildHTML(*args):
@@ -970,7 +974,7 @@ class Deblaze:
 ############################
     def findRemotingMethods(self, swf):
  
-        proc = subprocess.Popen(['./swfdump', '-D',swf,], 
+        proc = subprocess.Popen(['swfdump', '-D',swf,], 
                         shell=False, 
                         stdout=subprocess.PIPE,
                         stderr=subprocess.PIPE,
@@ -1190,7 +1194,7 @@ if __name__ == "__main__":
         useragent = 'PyAMF/%s' % '.'.join(map(lambda x: str(x), pyamf.__version__))
         
     if options.swf:
-        if not os.path.isfile('swfdump'):
+        if not is_tool('swfdump'):
            print "Missing swfdump in current path, please copy for automated mode"
            sys.exit(1)
         swfsplit = options.swf.split('/')
